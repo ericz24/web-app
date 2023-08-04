@@ -7,7 +7,7 @@ from starlette.routing import Route, Mount
 from starlette.templating import Jinja2Templates
 from starlette.config import Config
 from starlette.staticfiles import StaticFiles
-from starlette.responses import PlainTextResponse, JSONResponse
+from starlette.responses import PlainTextResponse, JSONResponse, FileResponse
 from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from json import loads, dumps
@@ -155,8 +155,12 @@ def index(request):
 def headers(request):
     return JSONResponse(dumps({k:v for k, v in request.headers.items()}))
 
+def conjurer(request):
+	return FileResponse('static/conjurer/conjurer.html')
+
 routes = [
     Route('/', endpoint=index),
+    Route('/conjurer', endpoint=conjurer),
     Route('/headers', endpoint=headers),
     Mount('/static', app=StaticFiles(directory='static'), name='static'),
 ]
